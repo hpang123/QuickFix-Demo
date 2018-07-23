@@ -63,8 +63,13 @@ import quickfix.field.TargetCompID;
 import quickfix.field.Text;
 import quickfix.field.TimeInForce;
 import quickfix.field.TransactTime;
+import hpang.quickfix.executor.Executor;
 
 import javax.swing.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -72,6 +77,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class BanzaiApplication implements Application {
+	private final static Logger log = LoggerFactory.getLogger(BanzaiApplication.class);
+	
     private final DefaultMessageFactory messageFactory = new DefaultMessageFactory();
     private OrderTableModel orderTableModel = null;
     private ExecutionTableModel executionTableModel = null;
@@ -95,25 +102,31 @@ public class BanzaiApplication implements Application {
     }
 
     public void onLogon(SessionID sessionID) {
+    	log.info("onLogon:" + sessionID);
         observableLogon.logon(sessionID);
     }
 
     public void onLogout(SessionID sessionID) {
+    	log.info("onLogout:" + sessionID);
         observableLogon.logoff(sessionID);
     }
 
     public void toAdmin(quickfix.Message message, SessionID sessionID) {
+    	log.info("toAdmin:" + sessionID + " message:"+message);
     }
 
     public void toApp(quickfix.Message message, SessionID sessionID) throws DoNotSend {
+    	log.info("toApp:" + sessionID + " message:"+message);
     }
 
     public void fromAdmin(quickfix.Message message, SessionID sessionID) throws FieldNotFound,
             IncorrectDataFormat, IncorrectTagValue, RejectLogon {
+    	log.info("fromAdmin:" + sessionID + " message:"+message);
     }
 
     public void fromApp(quickfix.Message message, SessionID sessionID) throws FieldNotFound,
             IncorrectDataFormat, IncorrectTagValue, UnsupportedMessageType {
+    	log.info("fromApp:" + sessionID + " message:"+message);
         try {
             SwingUtilities.invokeLater(new MessageProcessor(message, sessionID));
         } catch (Exception e) {
