@@ -16,6 +16,34 @@
 
 	<dependencies>
 
+		<!-- Spring caching framework inside this -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>4.1.4.RELEASE</version>
+		</dependency>
+
+		
+		<!-- Support for Ehcache and others -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>4.1.4.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>4.1.4.RELEASE</version>
+		</dependency>
+		
+		<dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>4.1.4.RELEASE</version>
+    </dependency>
+		
+		
 		<!-- QuickFIX/J dependencies -->
 		<dependency>
 			<groupId>org.quickfixj</groupId>
@@ -76,9 +104,9 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
+			<version>4.12</version>
 		</dependency>
+		
 	</dependencies>
 	
 	<build>
