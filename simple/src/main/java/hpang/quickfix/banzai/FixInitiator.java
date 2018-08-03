@@ -1,5 +1,7 @@
 package hpang.quickfix.banzai;
 
+import hpang.quickfix.fixmessage.InitiatorSender;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.management.JMException;
@@ -9,11 +11,14 @@ import javax.swing.SwingUtilities;
 import org.quickfixj.jmx.JmxExporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import quickfix.DefaultMessageFactory;
+import quickfix.DefaultSessionFactory;
 import quickfix.DoNotSend;
 import quickfix.FieldNotFound;
 import quickfix.FileStoreFactory;
+import quickfix.FixVersions;
 import quickfix.IncorrectDataFormat;
 import quickfix.IncorrectTagValue;
 import quickfix.Initiator;
@@ -51,6 +56,10 @@ import quickfix.field.TransactTime;
 
 public class FixInitiator implements quickfix.Application {
 
+	//test circular
+	@Autowired
+	private InitiatorSender initiatorSender;
+	
 	private final static Logger log = LoggerFactory.getLogger(FixInitiator.class);
 	
     private final DefaultMessageFactory messageFactory = new DefaultMessageFactory();
@@ -74,10 +83,12 @@ public class FixInitiator implements quickfix.Application {
     }
 
     public void onCreate(SessionID sessionID) {
+    	
     }
 
     public void onLogon(SessionID sessionID) {
     	log.info("onLogon:" + sessionID);
+    	initiatorSender.send();
     }
 
     public void onLogout(SessionID sessionID) {
@@ -309,5 +320,43 @@ public class FixInitiator implements quickfix.Application {
 
     public Initiator getInitiator(){
     	return this.initiator;
+    }
+    
+public static void main(String[] args) throws Exception {
+	
+	SessionSettings settings = new SessionSettings();
+	FixInitiator application = new FixInitiator(settings);
+	
+	boolean logHeartbeats = Boolean.valueOf(System.getProperty("logHeartbeats", "true"));
+	
+	MessageStoreFactory messageStoreFactory = new FileStoreFactory(settings);
+    LogFactory logFactory = new ScreenLogFactory(true, true, true, logHeartbeats);
+    MessageFactory messageFactory = new DefaultMessageFactory();
+
+    application.initiator = new SocketInitiator(application, messageStoreFactory, settings, logFactory,
+            messageFactory);
+    
+    	
+    	
+    	Order order = new Order();
+        order.setSide(OrderSide.BUY);
+        order.setType((OrderType.MARKET));
+        order.setTIF((OrderTIF.DAY));
+
+        order.setSymbol("BAML");
+        order.setQuantity(100);
+        order.setOpen(order.getQuantity());
+        /*
+        SessionID sessionID = new SessionID(FixVersions.BEGINSTRING_FIX44, "senderCompID", "senderSubID",
+                "targetCompID", "targetSubID");
+        
+        DefaultSessionFactory defaultSessionFactory = new DefaultSessionFactory(application, messageStoreFactory, logFactory);
+        Session session = defaultSessionFactory.create(sessionID, settings);
+       
+        
+        order.setSessionID(sessionID);
+        */
+
+        application.send(order);
     }
 }

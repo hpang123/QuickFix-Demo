@@ -1,5 +1,10 @@
 package hpang.quickfix.executor;
 
+import hpang.quickfix.banzai.Order;
+import hpang.quickfix.banzai.OrderSide;
+import hpang.quickfix.banzai.OrderTIF;
+import hpang.quickfix.banzai.OrderType;
+
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -317,5 +322,4 @@ public class FixAcceptor extends quickfix.MessageCracker implements quickfix.App
 		}
 		acceptor.stop();
 	}
-
 }

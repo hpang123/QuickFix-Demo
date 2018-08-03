@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration;
 
 
 @Configuration
-@ComponentScan({ "hpang.quickfix.*" })
-//@ComponentScan
+//@ComponentScan({ "hpang.quickfix.*" })
+@ComponentScan
 public class TestConfig {
 
 

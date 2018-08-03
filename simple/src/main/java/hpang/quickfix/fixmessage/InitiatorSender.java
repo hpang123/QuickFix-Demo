@@ -25,7 +25,12 @@ public class InitiatorSender {
         newOrderSingle.set(new OrderQty(order.getQuantity()));
         newOrderSingle.set(new Symbol(order.getSymbol()));
         newOrderSingle.set(new HandlInst('1'));
+        System.out.println(newOrderSingle.toString());
         fixInitiator.send(newOrderSingle, order.getSessionID());
     }
+	
+	public void send(){
+		System.out.println("Test circular case");
+	}
 
 }
