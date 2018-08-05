@@ -112,6 +112,7 @@ public class Banzai {
         log.info("Logon...");
         banzai.logon();
         
+        
         for(int i=0; i<10; i++){
         	log.info("Send order... " + i);
         	banzai.sendOrder(i);

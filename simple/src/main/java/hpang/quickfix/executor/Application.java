@@ -49,19 +49,20 @@ import quickfix.field.ApplVerID;
 import quickfix.field.AvgPx;
 import quickfix.field.CumQty;
 import quickfix.field.ExecID;
-import quickfix.field.ExecTransType;
 import quickfix.field.ExecType;
 import quickfix.field.LastPx;
 import quickfix.field.LastQty;
-import quickfix.field.LastShares;
 import quickfix.field.LeavesQty;
+import quickfix.field.MsgType;
 import quickfix.field.OrdStatus;
 import quickfix.field.OrdType;
 import quickfix.field.OrderID;
 import quickfix.field.OrderQty;
+import quickfix.field.Password;
 import quickfix.field.Price;
 import quickfix.field.Side;
 import quickfix.field.Symbol;
+import quickfix.field.Username;
 
 public class Application extends quickfix.MessageCracker implements quickfix.Application {
     private static final String DEFAULT_MARKET_PRICE_KEY = "DefaultMarketPrice";
@@ -136,6 +137,14 @@ public class Application extends quickfix.MessageCracker implements quickfix.App
     public void fromAdmin(quickfix.Message message, SessionID sessionID) throws FieldNotFound, IncorrectDataFormat,
             IncorrectTagValue, RejectLogon {
     	log.info("fromAdmin:" + sessionID + " message:"+message);
+    	
+    	if (message.getHeader().getField(new MsgType()).valueEquals(MsgType.LOGON )){
+    		if(!message.getField(new Username()).valueEquals("admin") ||
+    		 !message.getField(new Password()).valueEquals("password")){
+    			throw new RejectLogon("Logon is not correct");
+    		}
+    		
+    	}
     }
 
     public void fromApp(quickfix.Message message, SessionID sessionID) throws FieldNotFound, IncorrectDataFormat,
